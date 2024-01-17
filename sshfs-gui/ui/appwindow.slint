@@ -1,0 +1,25 @@
+import { Button, VerticalBox, HorizontalBox, LineEdit } from "std-widgets.slint";
+
+//'sshfs michael@192.168.1.197:/home/michael/ ~/Dev -o volname=DEV'
+
+
+export component AppWindow inherits Window {
+    VerticalBox {
+        HorizontalBox{
+                Text {
+                    text: "Username";
+                    font-size: 14px;
+                }
+                LineEdit{
+                    font-size: 14px;
+                    width: 200px;
+                    height: 25px;
+                    placeholder-text: "Enter text here";
+                }
+        }
+        Button {
+            text: "Increase value";
+
+        }
+    }
+}
