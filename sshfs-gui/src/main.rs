@@ -24,12 +24,8 @@ fn main() -> Result<(), slint::PlatformError> {
         let ui_handle = ui.as_weak();
         move || {
             let ui = ui_handle.unwrap();
-            // ui.set_password("".into());
             ui.set_requires_password(!ui.get_requires_password());
-            println!("{:?}", ui.get_password());
             ui.set_password("".into());
-            println!("{:?}", ui.get_password());
-
         }
     });
 
