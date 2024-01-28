@@ -26,7 +26,7 @@ export component AppWindow inherits Window {
                     width: 200px;
                     height: 25px;
                     placeholder-text: "jsmith";
-                    text: root.username;
+                    text <=> root.username;
                 }
         }
          HorizontalBox{
@@ -39,7 +39,7 @@ export component AppWindow inherits Window {
                    width: 200px;
                    height: 25px;
                    input-type: InputType.password;
-                   text: root.password;
+                   text <=> root.password;
                    enabled: root.requires_password;
                }
                Switch{
@@ -61,7 +61,7 @@ export component AppWindow inherits Window {
                          width: 200px;
                          height: 25px;
                          placeholder-text: "192.168.0.0";
-                         text: root.ip_addr;
+                         text <=> root.ip_addr;
                      }
          }
          HorizontalBox{
@@ -74,7 +74,7 @@ export component AppWindow inherits Window {
                    width: 200px;
                    height: 25px;
                    placeholder-text: "/home/";
-                   text: root.remote_target;
+                   text <=> root.remote_target;
                }
        }
         HorizontalBox{
@@ -87,7 +87,7 @@ export component AppWindow inherits Window {
                   width: 200px;
                   height: 25px;
                   placeholder-text: "~/Foo";
-                  text: root.local_mount_point;
+                  text <=> root.local_mount_point;
               }
               Button {
                 text: "Browse";
