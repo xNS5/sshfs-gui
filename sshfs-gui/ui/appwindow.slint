@@ -1,9 +1,20 @@
-import { Button, VerticalBox, HorizontalBox, LineEdit } from "std-widgets.slint";
+import { Button, Switch, LineEdit, VerticalBox, HorizontalBox } from "std-widgets.slint";
+
 
 //'sshfs michael@192.168.1.197:/home/michael/ ~/Dev -o volname=DEV'
 
 
 export component AppWindow inherits Window {
+    in-out property<string> username: "";
+    in-out property<string> password: "";
+    in-out property<string> ip_addr: "";
+    in-out property<string> remote_target: "";
+    in-out property<string> local_mount_point: "";
+    in-out property<bool> requires_password: true;
+
+    callback get_local_mount_point();
+    callback requires_password_change();
+
     VerticalBox {
         HorizontalBox{
                 Text {
@@ -14,12 +25,80 @@ export component AppWindow inherits Window {
                     font-size: 14px;
                     width: 200px;
                     height: 25px;
-                    placeholder-text: "Enter text here";
+                    placeholder-text: "jsmith";
+                    text: root.username;
                 }
         }
-        Button {
-            text: "Increase value";
+         HorizontalBox{
+               Text {
+                   text: "Password";
+                   font-size: 14px;
+               }
+               LineEdit{
+                   font-size: 14px;
+                   width: 200px;
+                   height: 25px;
+                   input-type: InputType.password;
+                   text: root.password;
+                   enabled: root.requires_password;
+               }
+               Switch{
+                    text: "Requires Password";
+                    checked: true;
+                    toggled => {
+                        root.requires_password_change();
+                    }
+               }
 
+       }
+        HorizontalBox{
+                     Text {
+                         text: "IP Address";
+                         font-size: 14px;
+                     }
+                     LineEdit{
+                         font-size: 14px;
+                         width: 200px;
+                         height: 25px;
+                         placeholder-text: "192.168.0.0";
+                         text: root.ip_addr;
+                     }
+         }
+         HorizontalBox{
+               Text {
+                   text: "Remote Target Directory";
+                   font-size: 14px;
+               }
+               LineEdit{
+                   font-size: 14px;
+                   width: 200px;
+                   height: 25px;
+                   placeholder-text: "/home/";
+                   text: root.remote_target;
+               }
+       }
+        HorizontalBox{
+              Text {
+                  text: "Local Mount Point";
+                  font-size: 14px;
+              }
+              LineEdit{
+                  font-size: 14px;
+                  width: 200px;
+                  height: 25px;
+                  placeholder-text: "~/Foo";
+                  text: root.local_mount_point;
+              }
+              Button {
+                text: "Browse";
+                primary: true;
+                clicked => {
+                  root.get_local_mount_point();
+                }
+              }
+        }
+        Button {
+            text: "Mount";
         }
     }
 }
