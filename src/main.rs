@@ -1,4 +1,5 @@
-slint::include_modules!();
+mod db;
+mod sshfs_utils;slint::include_modules!();
 
 use rfd::FileDialog;
 

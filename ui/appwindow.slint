@@ -16,6 +16,9 @@ export component AppWindow inherits Window {
     callback requires_password_change();
 
     VerticalBox {
+        Text{
+            text: "SSHFS GUI Utility";
+        }
         HorizontalBox{
                 Text {
                     text: "Username";
@@ -29,7 +32,7 @@ export component AppWindow inherits Window {
                     text <=> root.username;
                 }
         }
-         HorizontalBox{
+        HorizontalBox{
                Text {
                    text: "Password";
                    font-size: 14px;
@@ -64,7 +67,7 @@ export component AppWindow inherits Window {
                          text <=> root.ip_addr;
                      }
          }
-         HorizontalBox{
+        HorizontalBox{
                Text {
                    text: "Remote Target Directory";
                    font-size: 14px;
