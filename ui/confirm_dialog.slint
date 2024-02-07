@@ -5,10 +5,13 @@ import { Button } from "std-widgets.slint";
 export component ConfirmDialog inherits Window {
     in-out property<string> title: "";
     in-out property<string> message: "";
-    in-out property<string> ip_addr: "";
-    in-out property<string> remote_target: "";
+    in-out property on_ok;
+    in-out property on_cancel;
 
     VerticalBox {
-
+        Text {
+                text: "hello world";
+                color: green;
+            }
     }
 }

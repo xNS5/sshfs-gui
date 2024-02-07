@@ -7,8 +7,16 @@ use std::path::Path;
 use std::str;
 use regex::Regex;
 
-
 //'sshfs michael@192.168.1.197:/home/michael/ ~/Dev -o volname=DEV'
+
+slint::slint!{
+    export component HelloWorld {
+        Text {
+            text: "hello world";
+            color: green;
+        }
+    }
+}
 
 fn main() -> Result<(), slint::PlatformError> {
     let ui = AppWindow::new()?;
@@ -49,34 +57,40 @@ fn main() -> Result<(), slint::PlatformError> {
                 if output.status.success() {
                     let output_str = str::from_utf8(&output.stdout).expect("Invalid UTF-8");
                     let lines: Vec<&str> = output_str.lines().collect();
-                    if let Some(second_line) = lines.get(1) {
-                        let fields: Vec<&str> = second_line.split_whitespace().collect();
-                        if let Some(filesys) = fields.get(0) {
-                            let re = Regex::new(r"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b").unwrap();
-                            if let Some(captured) = re.find(filesys){
-                                let ip_str = captured.as_str();
-                               if ip_str.parse::<Ipv4Addr>().is_ok(){
-                                   // If there's an IP address in the string, and it's a valid IPv4 address
-                                   println!("{} is a valid IPv4 address", ip_str);
-                               } else {
-                                   // If there's an invalid IP address in the string, and it's not a valid IPv4 address.
-                                   println!("{} is not a valid IPv4 address", ip_str);
-                               }
+                    if lines.len() == 2 {
+                        if let Some(second_line) = lines.get(1) {
+                            let fields: Vec<&str> = second_line.split_whitespace().collect();
+                            if let Some(filesys) = fields.get(0) {
+                                let re = Regex::new(r"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b").unwrap();
+                                if let Some(captured) = re.find(filesys){
+                                    let ip_str = captured.as_str();
+                                    if ip_str.parse::<Ipv4Addr>().is_ok(){
+                                        // If there's an IP address in the string, and it's a valid IPv4 address and therefore is already a mount point for a sshfs volume.
+                                        println!("{} is a valid IPv4 address", ip_str);
+                                        notification().expect("");
+                                    }
+                                } else {
+                                    // if it doesn't contain an IPv4 address, safe to continue.
+                                    println!("{} is not a valid IPv4 address", filesys);
+                                }
                             } else {
-                                println!("{} is not a valid IPv4 address", filesys);
+                                println!("Unable to extract file system information");
                             }
-                        } else {
-                            println!("Unable to extract owner information");
                         }
-                    } else {
-                        println!("Unexpected output format");
                     }
                 }
             }
         }
-
-
     });
 
     ui.run()
+}
+
+fn notification(/*message: &str, on_ok: fn() -> bool, on_cancel: fn() -> bool*/) -> Result<(), slint::PlatformError> {
+   let hello = HelloWorld::new()?;
+    hello.run()
+}
+
+fn unmount(path: &Path) -> bool{
+    return true;
 }
