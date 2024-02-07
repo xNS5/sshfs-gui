@@ -1,7 +1,12 @@
-mod db;
-mod sshfs_utils;slint::include_modules!();
+slint::include_modules!();
 
 use rfd::FileDialog;
+use std::net::{Ipv4Addr};
+use std::process::Command;
+use std::path::Path;
+use std::str;
+use regex::Regex;
+
 
 //'sshfs michael@192.168.1.197:/home/michael/ ~/Dev -o volname=DEV'
 
@@ -28,6 +33,49 @@ fn main() -> Result<(), slint::PlatformError> {
             ui.set_requires_password(!ui.get_requires_password());
             ui.set_password("".into());
         }
+    });
+
+    ui.on_mount_remote_machine({
+        let ui_handle = ui.as_weak();
+        move || {
+            let ui = ui_handle.unwrap();
+            let local_mount_point = ui.get_local_mount_point().to_string();
+            let mount_point_path = Path::new(&local_mount_point);
+            if mount_point_path.exists() {
+                let output = Command::new("df")
+                    .arg(&local_mount_point)
+                    .output()
+                    .expect("Failed to execute command");
+                if output.status.success() {
+                    let output_str = str::from_utf8(&output.stdout).expect("Invalid UTF-8");
+                    let lines: Vec<&str> = output_str.lines().collect();
+                    if let Some(second_line) = lines.get(1) {
+                        let fields: Vec<&str> = second_line.split_whitespace().collect();
+                        if let Some(filesys) = fields.get(0) {
+                            let re = Regex::new(r"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b").unwrap();
+                            if let Some(captured) = re.find(filesys){
+                                let ip_str = captured.as_str();
+                               if ip_str.parse::<Ipv4Addr>().is_ok(){
+                                   // If there's an IP address in the string, and it's a valid IPv4 address
+                                   println!("{} is a valid IPv4 address", ip_str);
+                               } else {
+                                   // If there's an invalid IP address in the string, and it's not a valid IPv4 address.
+                                   println!("{} is not a valid IPv4 address", ip_str);
+                               }
+                            } else {
+                                println!("{} is not a valid IPv4 address", filesys);
+                            }
+                        } else {
+                            println!("Unable to extract owner information");
+                        }
+                    } else {
+                        println!("Unexpected output format");
+                    }
+                }
+            }
+        }
+
+
     });
 
     ui.run()

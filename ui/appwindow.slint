@@ -3,7 +3,6 @@ import { Button, Switch, LineEdit, VerticalBox, HorizontalBox } from "std-widget
 
 //'sshfs michael@192.168.1.197:/home/michael/ ~/Dev -o volname=DEV'
 
-
 export component AppWindow inherits Window {
     in-out property<string> username: "";
     in-out property<string> password: "";
@@ -14,11 +13,11 @@ export component AppWindow inherits Window {
 
     callback get_local_mount_point();
     callback requires_password_change();
+    callback mount_remote_machine();
+
+    title: "SSHFS GUI Utility";
 
     VerticalBox {
-        Text{
-            text: "SSHFS GUI Utility";
-        }
         HorizontalBox{
                 Text {
                     text: "Username";
@@ -102,6 +101,10 @@ export component AppWindow inherits Window {
         }
         Button {
             text: "Mount";
+            primary: true;
+            clicked => {
+               root.mount_remote_machine();
+            }
         }
     }
 }
